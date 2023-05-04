@@ -80,7 +80,7 @@ from django.contrib.auth.hashers import make_password
 import random
 import string
 
-class Client(AbstractBaseUser):
+class Client(models.Model):
     username = models.CharField(max_length=30, unique=True)
     email = models.EmailField()
     password = models.CharField(max_length=15)
@@ -89,29 +89,29 @@ class Client(AbstractBaseUser):
     def __str__(self):
         return self.username
 
-    def register(self, username, email, password, phone_number):
-        self.username = username
-        self.email = email
-        self.password = make_password(password)
-        self.phone_number = phone_number
-        self.save()
+    # def register(self, username, email, password, phone_number):
+    #     self.username = username
+    #     self.email = email
+    #     self.password = make_password(password)
+    #     self.phone_number = phone_number
+    #     self.save()
 
-    def login(self, username, password):
-        try:
-            user = Client.objects.get(username=username)
-            if user.check_password(password):
-                return True
-            else:
-                return False
-        except Client.DoesNotExist:
-            return False
+    # def login(self, username, password):
+    #     try:
+    #         user = Client.objects.get(username=username)
+    #         if user.check_password(password):
+    #             return True
+    #         else:
+    #             return False
+    #     except Client.DoesNotExist:
+    #         return False
 
-    def reset_password(self, username):
-        try:
-            user = Client.objects.get(username=username)
-            new_password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-            user.password = make_password(new_password)
-            user.save()
-            return new_password
-        except Client.DoesNotExist:
-            return None
+    # def reset_password(self, username):
+    #     try:
+    #         user = Client.objects.get(username=username)
+    #         new_password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+    #         user.password = make_password(new_password)
+    #         user.save()
+    #         return new_password
+    #     except Client.DoesNotExist:
+    #         return None

@@ -32,30 +32,43 @@ class ProduitSerializer(serializers.ModelSerializer):
 # serializers.py
 
 from rest_framework import serializers
-from django.contrib.auth.password_validation import validate_password
+from .models import Restaurateur
+
+class RestaurateurSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Restaurateur
+        fields = ('username', 'email', 'password', 'phone_number')
+
+
+
+
 from django.contrib.auth import get_user_model
+from rest_framework import serializers
 
 UserModel = get_user_model()
 
-class RestaurateurSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(min_length=8, write_only=True, validators=[validate_password])
+class RegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('username', 'email', 'password', 'phone_number')
 
     def create(self, validated_data):
         user = UserModel.objects.create_user(**validated_data)
         return user
 
-    class Meta:
-        model = UserModel
-        fields = ('username', 'email', 'password', 'phone_number')
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=20)
-    password = serializers.CharField(max_length=15, write_only=True)
+    username = serializers.CharField()
+    password = serializers.CharField()
+
 
 class PasswordResetSerializer(serializers.Serializer):
-    phone_number = serializers.CharField(max_length=20)
     email = serializers.EmailField()
-    password = serializers.CharField(min_length=8, write_only=True, validators=[validate_password])
+
+
+
+
+
 
 
 # serializers.py
@@ -86,7 +99,34 @@ from .models import Client
 from rest_framework import serializers
 from .models import Client
 
-class ClientSerializer(serializers.ModelSerializer):
+# class ClientSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Client
+#         fields = ('id', 'username', 'email', 'phone_number')
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = Client
-        fields = ('id', 'username', 'email', 'phone_number')
+        fields = ('id', 'username', 'email', 'password', 'phone_number')
+
+    def create(self, validated_data):
+        user = Client.objects.create(**validated_data)
+        return user
+
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField()
+    password = serializers.CharField()
+
+
+class PasswordResetSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
+
+from rest_framework import serializers
+from .models import Produit
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Produit
+        fields = '__all__'
